@@ -57,6 +57,7 @@
 
     <button class="ghost" id="logoutBtn">تسجيل الخروج</button>
   </div>
+  <p style="text-align:center;color:#ccc;font-size:10px;margin-top:10px;">نسخة v3</p>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -84,12 +85,21 @@ auth.onAuthStateChanged(async (user) => {
   await user.reload();
   currentUid = user.uid;
 
-  const doc = await db.collection('users').doc(user.uid).get();
+  let doc = await db.collection('users').doc(user.uid).get();
+
+  // لو البيانات لسه ما اتسجلتش خلاص (بطء نت)، جرّبي كذا مرة قبل ما تبلّغي بخطأ
+  let tries = 0;
+  while(!doc.exists && tries < 5){
+    await new Promise(r => setTimeout(r, 1500));
+    doc = await db.collection('users').doc(user.uid).get();
+    tries++;
+  }
+
   document.getElementById('loading').style.display = 'none';
   document.getElementById('content').style.display = 'block';
 
   if(!doc.exists){
-    document.getElementById('statusText').textContent = 'حصل خطأ في بيانات حسابك، تواصلي مع المعلمة.';
+    document.getElementById('statusText').innerHTML = 'النت شكله بطيء شوية ومستني بياناتك توصل.<br><br><button class="btn-sm btn-approve" onclick="location.reload()">حاولي تاني</button>';
     return;
   }
   currentData = doc.data();
