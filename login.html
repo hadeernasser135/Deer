@@ -43,7 +43,7 @@
     <span id="toSignupWrap">مفيش حساب؟ <a id="toSignup">سجّلي دلوقتي</a></span>
     <span id="toLoginWrap" style="display:none">عندك حساب؟ <a id="toLogin">دخول</a></span>
   </div>
-  <p style="text-align:center;color:#ccc;font-size:10px;margin-top:20px;">نسخة v3</p>
+  <p style="text-align:center;color:#ccc;font-size:10px;margin-top:20px;">نسخة v4</p>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -126,9 +126,6 @@ signupForm.addEventListener('submit', async (e) => {
       activatedAt: null,
       expiresAt: null
     });
-
-    // بعت إيميل تأكيد - لو فشل مش هيوقف عملية التسجيل
-    try{ await cred.user.sendEmailVerification(); }catch(e){}
 
     window.location.href = AFTER_LOGIN_PAGE;
   }catch(err){
